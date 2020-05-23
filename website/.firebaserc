@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "projbirdie": {
+      "hosting": {
+        "website": [
+          "projbirdie"
+        ]
+      }
+    }
+  }
+}

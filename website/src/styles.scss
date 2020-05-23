@@ -1,0 +1,31 @@
+@import "~@angular/material/theming";
+@include mat-core();
+
+$hype-app-primary: mat-palette($mat-amber);
+
+$hype-app-accent: mat-palette($mat-indigo);
+
+// The warn palette is optional (defaults to red).
+$hype-app-warn: mat-palette($mat-red, A700);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$hype-app-theme: mat-dark-theme(
+  $hype-app-primary,
+  $hype-app-accent,
+  $hype-app-warn
+);
+
+@include angular-material-theme($hype-app-theme);
+@import "./colors.scss";
+/* You can add global styles to this file, and also import other style files */
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  box-sizing: border-box;
+  min-width: 20rem;
+  background-color: color(background) !important;
+}

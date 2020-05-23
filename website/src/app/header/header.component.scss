@@ -1,0 +1,51 @@
+@import "../../colors.scss";
+:host {
+  box-sizing: border-box;
+  background-color: color(background-light);
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+h2 {
+  color: color(font-alt);
+  flex: 1 1 60%;
+  font: 400 2rem/3rem "Vibur", "Roboto", sans-serif;
+}
+
+pb-nav {
+  flex: 1 1 auto;
+}
+
+button {
+  color: color(font-alt);
+}
+
+h2, pb-nav, button {
+  margin: 0 1rem;
+}
+
+/*==========  Mobile First Method  ==========*/
+// /* Custom, iPhone Retina */
+// @media only screen and (min-width : 320px) {
+// }
+// /* Extra Small Devices, Phones */
+// @media only screen and (min-width : 480px) {
+// }
+/* Small Devices, Tablets */
+@media only screen and (min-width: 768px) {
+  button {
+    display: none;
+  }
+
+  h2, pb-nav, button {
+    margin: 0 4rem;
+  }
+  
+}
+// /* Medium Devices, Desktops */
+// @media only screen and (min-width : 992px) {
+// }
+// /* Large Devices, Wide Screens */
+// @media only screen and (min-width : 1200px) {
+// }

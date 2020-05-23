@@ -1,0 +1,14 @@
+{
+  "name": "projectbirdie",
+  "version": "0.0.1",
+  "description": "Web Application for 3d visuilization of Bird Data",
+  "repository": "git@github.com:patel-malav/projectbirdie.git",
+  "author": "patel-malav <patelmalav64@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "install": "",
+    "start": "",
+    "stop": ""
+  }
+}

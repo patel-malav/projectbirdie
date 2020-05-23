@@ -1,0 +1,30 @@
+@import "../colors.scss";
+
+:host {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: column nowrap;
+  min-height: 100%;
+  height: max-content;
+}
+
+mat-progress-bar{
+  height: 2px;
+  margin: 1px 0;
+  z-index: 510;
+}
+
+::ng-deep .mat-progress-bar-buffer {
+  background-color: color(background-dark) !important;
+}
+
+section {
+  flex: 1 1 auto;
+  router-outlet {
+    display: block;
+  }
+}
+
+pb-footer {
+  margin-top: auto;
+}
