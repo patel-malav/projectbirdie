@@ -8,7 +8,6 @@
   "private": false,
   "scripts": {
     "install": "",
-    "start": "",
-    "stop": ""
+    "start": ""
   }
 }

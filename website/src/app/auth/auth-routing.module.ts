@@ -1,26 +1,36 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AuthComponent } from './auth.component';
 import { LoginComponent } from './login/login.component';
-import { AccountComponent } from './account.component';
+import { ForgotComponent } from './forgot/forgot.component';
+import { VerifyComponent } from './verify/verify.component';
 import { RegisterComponent } from './register/register.component';
-import { UserComponent } from './user/user.component';
 
 const routes: Routes = [
   {
-    path: 'account',
-    component: AccountComponent,
+    path: 'auth',
+    component: AuthComponent,
     children: [
+      {
+        path: '',
+        redirectTo: 'login',
+        pathMatch: 'full',
+      },
       {
         path: 'login',
         component: LoginComponent,
+      },
+      {
+        path: 'forgot',
+        component: ForgotComponent,
       },
       {
         path: 'register',
         component: RegisterComponent,
       },
       {
-        path: 'user',
-        component: UserComponent,
+        path: 'verify',
+        component: VerifyComponent,
       },
     ],
   },
@@ -30,4 +40,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class AccountRoutingModule {}
+export class AuthRoutingModule {}

@@ -1,0 +1,55 @@
+@import "../../../colors.scss";
+
+:host {
+  grid-area: route;
+  background-color: color(background-light);
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: stretch;
+  justify-content: space-evenly;
+  padding: 2rem;
+  text-align: center;
+}
+
+h1 {
+  margin: 1rem 0;
+  font: 400 2.5rem/3.5rem Vibur;
+}
+
+form {
+  display: contents;
+  & > * {
+    margin: 1rem 0;
+  }
+}
+
+small {
+  text-align: justify;
+  font: 400 0.8rem/1rem Roboto;
+  a:link,
+  a:visited {
+    color: color(font);
+  }
+}
+
+// /*==========  Mobile First Method  ==========*/
+// /* Custom, iPhone Retina */
+// @media only screen and (min-width : 320px) {
+// }
+// /* Extra Small Devices, Phones */
+// @media only screen and (min-width : 480px) {
+// }
+/* Small Devices, Tablets */
+@media only screen and (min-width : 768px) {
+    form {
+        & > * {
+            margin: 1rem 4rem;
+        }
+    }
+}
+// /* Medium Devices, Desktops */
+// @media only screen and (min-width : 992px) {
+// }
+// /* Large Devices, Wide Screens */
+// @media only screen and (min-width : 1200px) {
+// }

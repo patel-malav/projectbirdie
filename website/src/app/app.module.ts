@@ -7,7 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { AngularFireModule } from '@angular/fire';
-import {} from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,9 +15,9 @@ import { CoreModule } from './core/core.module';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { NavComponent } from './nav/nav.component';
-import { AccountModule } from './account/account.module';
 import { ExploreModule } from './explore/explore.module';
 import { environment } from 'src/environments/environment';
+import { AuthModule } from './auth/auth.module';
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent, FooterComponent, NavComponent],
@@ -29,10 +29,11 @@ import { environment } from 'src/environments/environment';
     MatIconModule,
     MatProgressBarModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFirestoreModule,
     AppRoutingModule,
     CoreModule,
-    AccountModule,
     ExploreModule,
+    AuthModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
