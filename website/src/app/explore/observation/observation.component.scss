@@ -1,0 +1,6 @@
+@import "../../../colors.scss";
+
+:host {
+  grid-area: route;
+  background-color: color(background-light);
+}

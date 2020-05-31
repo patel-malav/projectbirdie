@@ -1,0 +1,29 @@
+@import "../../../colors.scss";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  background-color: color(background-dark);
+  margin: 0.5rem 0;
+}
+
+h3 {
+  margin: 0;
+  padding: 0.4rem 1rem;
+  background-color: color(background);
+}
+
+div {
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  ::ng-deep h2 {
+    margin: 0;
+    flex: 1 1 auto;
+    font: 300 2rem/2.5rem Vibur;
+  }
+  img {
+    width: 48px;
+    height: 48px;
+  }
+}

@@ -1,0 +1,14 @@
+@import "../../../colors.scss";
+
+:host {
+  display: block;
+  padding: 1rem;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+::ng-deep .mat-form-field-wrapper {
+  padding-bottom: 0;
+}

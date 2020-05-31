@@ -5,11 +5,13 @@ import { LoginComponent } from './login/login.component';
 import { ForgotComponent } from './forgot/forgot.component';
 import { VerifyComponent } from './verify/verify.component';
 import { RegisterComponent } from './register/register.component';
+import { AuthGuard } from './auth.guard';
 
 const routes: Routes = [
   {
     path: 'auth',
     component: AuthComponent,
+    canActivate: [AuthGuard],
     children: [
       {
         path: '',

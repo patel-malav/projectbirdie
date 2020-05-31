@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { AuthService } from '../shared/auth.service';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'pb-nav',
@@ -10,16 +10,35 @@ import { AuthService } from '../shared/auth.service';
     </button>
     <div id="panel" [ngClass]="{ open: open }">
       <div id="body">
-        <a routerLink="/account" routerLinkActive="active" mat-stroked-button
-          >Account</a
+        <a routerLink="/account" routerLinkActive="active" mat-stroked-button>
+          Account
+        </a>
+        <a
+          routerLink="/contribute"
+          routerLinkActive="active"
+          mat-stroked-button
         >
-        <a routerLink="/contribute" routerLinkActive="active" mat-stroked-button
-          >Contribute</a
+          Contribute
+        </a>
+        <a routerLink="/explore" routerLinkActive="active" mat-stroked-button>
+          Explore
+        </a>
+        <a
+          class="auth"
+          *ngIf="(auth.authenticated$ | async) === false"
+          routerLink="/auth/login"
+          mat-stroked-button
         >
-        <a routerLink="/explore" routerLinkActive="active" mat-stroked-button
-          >Explore</a
+          Sign In
+        </a>
+        <a
+          class="auth"
+          *ngIf="auth.authenticated$ | async"
+          mat-stroked-button
+          (click)="auth.signOut()"
         >
-        <button mat-raised-button (click)="auth.signOut()" color="primary">Sign Out</button>
+          Sign Out
+        </a>
         <section>
           <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do

@@ -29,48 +29,48 @@ export class GalleryComponent implements OnInit {
       tall: true,
       wide: true,
       url:
-        'https://images.unsplash.com/photo-1558981359-219d6364c9c8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2100&q=80',
+        'assets/placeholder.png',
     },
     {
       name: 'malav',
       url:
-        'https://images.unsplash.com/photo-1558981359-219d6364c9c8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2100&q=80',
+        'assets/placeholder.png',
     },
     {
       name: 'malav',
       url:
-        'https://images.unsplash.com/photo-1558981359-219d6364c9c8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2100&q=80',
+        'assets/placeholder.png',
     },
     {
       name: 'malav',
       url:
-        'https://images.unsplash.com/photo-1558981359-219d6364c9c8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2100&q=80',
+        'assets/placeholder.png',
     },
     {
       name: 'malav',
       url:
-        'https://images.unsplash.com/photo-1558981359-219d6364c9c8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2100&q=80',
+        'assets/placeholder.png',
     },
     {
       name: 'malav',
       url:
-        'https://images.unsplash.com/photo-1558981359-219d6364c9c8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2100&q=80',
+        'assets/placeholder.png',
     },
-    {
-      name: 'malav',
-      url:
-        'https://images.unsplash.com/photo-1558981359-219d6364c9c8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2100&q=80',
-    },
-    {
-      name: 'malav',
-      url:
-        'https://images.unsplash.com/photo-1558981359-219d6364c9c8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2100&q=80',
-    },
-    {
-      name: 'malav',
-      url:
-        'https://images.unsplash.com/photo-1558981359-219d6364c9c8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2100&q=80',
-    },
+    // {
+    //   name: 'malav',
+    //   url:
+    //     'assets/placeholder.png',
+    // },
+    // {
+    //   name: 'malav',
+    //   url:
+    //     'assets/placeholder.png',
+    // },
+    // {
+    //   name: 'malav',
+    //   url:
+    //     'assets/placeholder.png',
+    // },
   ];
 
   test = 'malav';

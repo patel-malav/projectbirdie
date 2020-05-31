@@ -21,8 +21,9 @@ button[mat-icon-button] {
   background-color: color(background-light);
 }
 
-a[mat-stroked-button], button[mat-stroked-button] {
-  font: 400 2rem/3rem "Vibur", "Roboto", sans-serif;
+a[mat-stroked-button],
+button[mat-stroked-button] {
+  font: 400 2rem/3rem Vibur;
 }
 
 .open {
@@ -43,6 +44,11 @@ a[mat-stroked-button], button[mat-stroked-button] {
       margin: 1rem;
     }
   }
+}
+
+.auth {
+  color: black;
+  background-color: color(font-default);
 }
 
 .active {
