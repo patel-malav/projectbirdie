@@ -1,9 +1,16 @@
-import { gql, IResolvers } from "apollo-server-express";
+import { gql, IResolvers, ApolloError } from "apollo-server-express";
 import { IMonkManager } from "monk";
-import { modelPath } from "../env.json";
+import { assetsPath } from "../env.json";
+
+interface Country {
+  cid: string;
+  name: string;
+  model: string;
+}
 
 interface Args {
   ids: string[];
+  names: string[];
 }
 
 interface Context {
@@ -14,29 +21,30 @@ const schema = gql`
   type Country {
     cid: ID!
     name: String!
-    model: String
+    model: Model
+    flag: String
+    coord: Coordinate
   }
   extend type Query {
-    country(ids: [String]): [Country]
+    countries(ids: [String]): [Country]
   }
 `;
 
 const resolver: IResolvers = {
   Country: {
-    model: (p: any) => modelPath + p.name + ".obj",
+    model: ({ model, cid }) => {
+      if (!model) return null;
+      else return { path: `${assetsPath}/countries/${cid}.obj` };
+    },
   },
   Query: {
-    country: async (p: any, { ids }: Args, { db }: Context) => {
+    countries: async (p: any, { ids }: Args, { db }: Context) => {
       const aves = db.get("countries");
-      let result = null;
-      try {
-        if (ids) {
-          result = await aves.find({ cid: { $in: ids } });
-        } else {
-          result = await aves.find({});
-        }
-      } catch (error) {
-        console.error(error);
+      let result: Country[];
+      if (ids) {
+        result = await aves.find({ cid: { $in: ids } });
+      } else {
+        result = await aves.find({});
       }
       return result;
     },

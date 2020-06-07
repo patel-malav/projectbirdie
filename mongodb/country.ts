@@ -2,19 +2,31 @@ import monk, { IMonkManager } from "monk";
 import axios from "axios";
 import inquirer from "inquirer";
 
+const countriesAPI = "https://restcountries.eu/rest/v2";
+const inatAPI = "https://api.inaturalist.org/v1";
 const db = monk(
   "mongodb://app:letmein@projbirdie.tech:27017/data?authSource=data"
 );
 
-// updateCountries(db).then(() => {
-//   console.log("Exiting In 10s...");
-//   setTimeout(() => db.close(), 10000);
-// });
+async function setInatPlaceID(db: IMonkManager) {
+  const collection = db.get("countries");
+}
 
-async function updateCountries(db: IMonkManager) {
+async function updateCountryWithLatLngFlag(db: IMonkManager) {
+  const collection = db.get("countries");
+  const resp = await axios.get(`${countriesAPI}/all`, {
+    params: "alpha3Code;latlng;flag",
+  });
+
+  for (let { alpha3Code, latlng: coord, flag } of resp.data) {
+    collection.update({ cid: alpha3Code }, { $set: { coord, flag } });
+  }
+}
+
+async function insertCountries(db: IMonkManager) {
   const collection = db.get("countries");
 
-  const resp = await axios.get("https://restcountries.eu/rest/v2/all", {
+  const resp = await axios.get(`${countriesAPI}/all`, {
     params: {
       fields: "name;alpha3Code;latlng",
     },
