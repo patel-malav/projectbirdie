@@ -1,18 +1,99 @@
 import monk, { IMonkManager } from "monk";
 import axios from "axios";
 import inquirer from "inquirer";
+import { Subject } from "rxjs";
 
+export interface Country {
+  _id: string;
+  name: string;
+  cid: string;
+  model: boolean;
+  coord: number[];
+  flag: string;
+  inat: Inat;
+  test: number;
+}
+
+export interface Inat {
+  place_id: number;
+}
+
+const dbCon =
+  "mongodb://app:letmein@projbirdie.tech:27017/data?authSource=data";
 const countriesAPI = "https://restcountries.eu/rest/v2";
 const inatAPI = "https://api.inaturalist.org/v1";
-const db = monk(
-  "mongodb://app:letmein@projbirdie.tech:27017/data?authSource=data"
-);
 
+const db = monk(dbCon);
+// const countries = db.get("countries");
+
+async function observations({ _id, inat: { place_id } }: Country) {
+  let total_obs;
+  try {
+    let {
+      data: { total_results },
+    } = await axios.get(
+      `${inatAPI}/observations?place_id=${place_id}&iconic_taxa=Aves&per_page=0`
+    );
+    total_obs = total_results;
+  } catch (error) {
+    total_obs = 0;
+  }
+  console.log(
+    `GOT ${_id} With ${total_obs} from ${inatAPI}/observations?place_id=${place_id}&iconic_taxa=Aves&per_page=0`
+  );
+  return { "inat.total_obs": total_obs };
+}
+
+async function updateCountriesWith(
+  db: IMonkManager,
+  fun: (country: Country) => Promise<{ [key: string]: any }>
+) {
+  const collection = db.get("countries");
+  const countries = await collection.find({});
+  const errors: any[] = [];
+
+  for (let country of countries) {
+    let result = await fun(country);
+    let confirm: any;
+    try {
+      confirm = await collection.update({ _id: country._id }, { $set: result });
+      if (!confirm.ok) throw "Did Not Updated in Database";
+      if (!confirm.nModified) throw "Nothing Changed";
+    } catch (error) {
+      errors.push(`${country._id} has ${error}`);
+    }
+  }
+  db.close();
+  if (errors.length) console.log(errors);
+  return null;
+}
+
+// const countries = monk(dbCon).get("countries");
+// const prompt$ = new Subject<{ [key: string]: any }>();
+// const updateCountries$ = new Subject<{
+//   query: { [key: string]: any };
+//   update: { [key: string]: any };
+// }>();
+
+// updateCountries$.subscribe(({ query, update }) =>
+//   countries.update(query, update)
+// );
+
+// updateCountries$.next({ query: { cid: "AFG" }, update: { test: "hello" } });
+
+// inquirer
+//   .prompt(prompt$)
+//   .ui.process.subscribe((ans) => setTimeout(() => console.log(ans), 4000));
+
+// prompt$.next({ message: "Prompt 1? ", name: "test1" });
+// prompt$.next({ message: "Prompt 2? ", name: "test2" });
+
+// I wrote this do not want to do it again
 async function setInatPlaceID(db: IMonkManager) {
   const collection = db.get("countries");
 }
 
-async function updateCountryWithLatLngFlag(db: IMonkManager) {
+async function updateCountriesWithLatLngFlag(db: IMonkManager) {
   const collection = db.get("countries");
   const resp = await axios.get(`${countriesAPI}/all`, {
     params: "alpha3Code;latlng;flag",
