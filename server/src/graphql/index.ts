@@ -4,7 +4,6 @@ import {
   schema as countrySchema,
   resolver as countryResolver,
 } from "./country";
-import { schema as modelSchema } from "./model";
 import { schema as coordinateSchema } from "./coordinate";
 
 const queryType = gql`
@@ -15,7 +14,6 @@ const queryType = gql`
 
 export const typeDefs: DocumentNode[] = [
   countrySchema,
-  modelSchema,
   coordinateSchema,
   queryType,
 ];

@@ -9,7 +9,7 @@ const schema = gql`
 
 // const resolver: IResolvers = {
 //   Coordinate: {
-//     lat: ({latlng}) => 
+//     lat: ({coord}) => 
 //   },
 // };
 

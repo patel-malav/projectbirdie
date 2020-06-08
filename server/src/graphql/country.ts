@@ -19,12 +19,19 @@ interface Context {
 
 const schema = gql`
   type Country {
-    cid: ID!
+    id: ID!
     name: String!
     model: Model
     flag: String
-    coord: Coordinate
+    inatId: Int!
+    observations: Int!
+    # coord: Coordinate
   }
+
+  type Model {
+    path: String
+  }
+
   extend type Query {
     countries(ids: [String]): [Country]
   }
@@ -32,19 +39,23 @@ const schema = gql`
 
 const resolver: IResolvers = {
   Country: {
-    model: ({ model, cid }) => {
+    id: ({ _id }) => _id,
+    model: ({ model, _id }) => {
       if (!model) return null;
-      else return { path: `${assetsPath}/countries/${cid}.obj` };
+      else return { path: `${assetsPath}/countries/${_id}.obj` };
     },
+    observations: ({ inat: { total_obs } }) => total_obs,
+    inatId: ({ inat: { place_id } }) => place_id,
   },
   Query: {
     countries: async (p: any, { ids }: Args, { db }: Context) => {
-      const aves = db.get("countries");
+      const countries = db.get("countries");
       let result: Country[];
       if (ids) {
-        result = await aves.find({ cid: { $in: ids } });
+        console.log(await countries.find({ _id: { $in: ["IND"] } }));
+        result = await countries.find({ _id: { $in: ids } });
       } else {
-        result = await aves.find({});
+        result = await countries.find({});
       }
       return result;
     },

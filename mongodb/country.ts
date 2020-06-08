@@ -1,7 +1,8 @@
 import monk, { IMonkManager } from "monk";
 import axios from "axios";
 import inquirer from "inquirer";
-import { Subject } from "rxjs";
+import { readFile } from "fs";
+import { join } from "path";
 
 export interface Country {
   _id: string;
@@ -24,7 +25,7 @@ const countriesAPI = "https://restcountries.eu/rest/v2";
 const inatAPI = "https://api.inaturalist.org/v1";
 
 const db = monk(dbCon);
-// const countries = db.get("countries");
+const countries = db.get("countries");
 
 async function observations({ _id, inat: { place_id } }: Country) {
   let total_obs;
@@ -104,7 +105,7 @@ async function updateCountriesWithLatLngFlag(db: IMonkManager) {
   }
 }
 
-async function insertCountries(db: IMonkManager) {
+async function fillCountryDataFromInat(db: IMonkManager) {
   const collection = db.get("countries");
 
   const resp = await axios.get(`${countriesAPI}/all`, {
@@ -139,4 +140,18 @@ async function insertCountries(db: IMonkManager) {
   }
 
   return null;
+}
+
+async function insertCountryData(db: IMonkManager) {
+  const data = await new Promise((res, rej) => {
+    readFile(
+      join(__dirname, "../output/countries.json"),
+      { encoding: "utf8" },
+      (err, data) => {
+        if (err) rej(err);
+        else res(data);
+      }
+    );
+  });
+  
 }
