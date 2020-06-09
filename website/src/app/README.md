@@ -2,6 +2,7 @@
 ```
 projbirdie.tech
 |___account
+|   |___forgot
 |   |___login
 |   |___register
 |   |___user

@@ -1,0 +1,4 @@
+node_modules
+dist
+dist/public
+src/env.json

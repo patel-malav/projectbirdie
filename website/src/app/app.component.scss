@@ -1,16 +1,36 @@
 @import "../colors.scss";
 
 :host {
-  box-sizing: border-box;
-  display: flex;
-  flex-flow: column nowrap;
-  min-height: 100%;
-  height: max-content;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: [title_bar] 3rem [progress_bar] 0.25rem [main] 1fr [footer] auto;
+  grid-template-areas:
+    "header nav"
+    "progress progress"
+    "route route"
+    "footer footer";
+  // grid-column-gap: 16px;
+  // grid-row-gap: 4px;
 }
 
-mat-progress-bar{
-  height: 2px;
-  margin: 1px 0;
+router-outlet {
+  display: none;
+}
+
+pb-header {
+  grid-area: header;
+}
+pb-nav {
+  grid-area: nav;
+}
+mat-progress-bar {
+  grid-area: progress;
+  background-color: color(background-dark);
+  height: 4px;
+  position: sticky;
+  top: 3rem;
+  left: 0;
   z-index: 510;
 }
 
@@ -18,13 +38,29 @@ mat-progress-bar{
   background-color: color(background-dark) !important;
 }
 
-section {
-  flex: 1 1 auto;
-  router-outlet {
-    display: block;
-  }
+pb-footer {
+  grid-area: footer;
 }
 
-pb-footer {
-  margin-top: auto;
+/*==========  Mobile First Method  ==========*/
+/* Custom, iPhone Retina */
+@media only screen and (min-width: 320px) {
+}
+/* Extra Small Devices, Phones */
+@media only screen and (min-width: 480px) {
+}
+/* Small Devices, Tablets */
+@media only screen and (min-width: 768px) {
+  :host {
+    grid-template-columns: 1fr 0.7fr;
+  }
+}
+/* Medium Devices, Desktops */
+@media only screen and (min-width: 992px) {
+}
+/* Large Devices, Wide Screens */
+@media only screen and (min-width: 1200px) {
+  :host {
+    grid-template-columns: 1fr 0.45fr;
+  }
 }

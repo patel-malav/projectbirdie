@@ -18,14 +18,20 @@ $hype-app-theme: mat-dark-theme(
 @include angular-material-theme($hype-app-theme);
 @import "./colors.scss";
 /* You can add global styles to this file, and also import other style files */
-html,
-body {
+html {
+  background-color: color(background) !important;
+  color: color(font-default);
+  overflow-x: hidden;
   height: 100%;
 }
 body {
+  min-height: 100%;
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-  box-sizing: border-box;
+  font: 400 1rem/1.5rem Roboto, "Helvetica Neue", sans-serif;
   min-width: 20rem;
-  background-color: color(background) !important;
+}
+*,
+::after,
+::before {
+  box-sizing: border-box;
 }
