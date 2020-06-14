@@ -16,7 +16,7 @@ interface Image {
         [ngClass]="{ 'img-tall': image.tall, 'img-wide': image.wide }"
         [ngStyle]="{ 'background-image': 'url(' + image.url + ')' }"
       >
-        {{ image.name }}
+        <span>{{ image.name }}</span>
       </div>
     </ng-container>
   `,
@@ -25,36 +25,34 @@ interface Image {
 export class GalleryComponent implements OnInit {
   @Input() images: Image[] = [
     {
-      name: 'malav',
+      name: 'Yellow-bellied Sunbird-Asity',
       tall: true,
       wide: true,
-      url:
-        'assets/placeholder.png',
+      url: 'https://static.inaturalist.org/photos/3890846/large.jpg?1545888541',
     },
     {
-      name: 'malav',
+      name: 'Barred Owl',
       url:
-        'assets/placeholder.png',
+        'https://static.inaturalist.org/photos/42714528/large.jpg?1561230519',
     },
     {
-      name: 'malav',
+      name: 'Southern Brownhood Kingfisher',
       url:
-        'assets/placeholder.png',
+        'https://static.inaturalist.org/photos/77357724/large.jpeg?1591504211',
     },
     {
-      name: 'malav',
-      url:
-        'assets/placeholder.png',
+      name: 'Thick-billed Raven',
+      url: 'https://static.inaturalist.org/photos/9872415/large.jpg?1503184241',
     },
     {
-      name: 'malav',
+      name: 'Cordilleran Flycatcher',
       url:
-        'assets/placeholder.png',
+        'https://static.inaturalist.org/photos/77551926/large.jpg?1591579580',
     },
     {
-      name: 'malav',
+      name: 'Ring-billed Gull',
       url:
-        'assets/placeholder.png',
+        'https://static.inaturalist.org/photos/77572344/large.jpg?1591587516',
     },
     // {
     //   name: 'malav',

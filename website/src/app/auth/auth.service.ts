@@ -5,6 +5,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { auth } from 'firebase/app';
+import { DataBusService } from '../data-bus.service';
 
 interface User {
   uid: string;
@@ -23,7 +24,8 @@ export class AuthService {
   constructor(
     private afAuth: AngularFireAuth,
     private afs: AngularFirestore,
-    private router: Router
+    private router: Router,
+    private bus: DataBusService
   ) {
     this.getRedirectResult();
     this.user$ = afAuth.authState.pipe(
@@ -66,7 +68,7 @@ export class AuthService {
           },
           { merge: true }
         );
-        this.router.navigate(['account', 'user']);
+        this.router.navigate(['account']);
       }
     } catch (error) {
       console.error(`Error in updating user data`, error);
@@ -90,6 +92,7 @@ export class AuthService {
         email,
         password
       );
+      credential.user.sendEmailVerification();
       this.afs.doc<User>(`users/${credential.user.uid}`).set(
         {
           uid: credential.user.uid,
@@ -98,7 +101,7 @@ export class AuthService {
         },
         { merge: true }
       );
-      this.router.navigate(['account']);
+      this.router.navigate(['auth/verify']);
     } catch (error) {
       console.error('Error in Creating User with email & password', error);
     }

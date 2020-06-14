@@ -5,7 +5,7 @@
   display: grid;
   margin: 2rem;
   grid-template-columns: 1fr minmax(16rem, 2fr) 1fr;
-  grid-template-rows: min-content minmax(16rem, 1fr);
+  grid-template-rows: 6rem minmax(16rem, 1fr);
   gap: 2rem;
 
   grid-template-areas:
@@ -15,7 +15,49 @@
 
 #aside {
   grid-area: aside;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
+#info-panel,
+#ui-panel,
+#data-panel {
   background-color: color(background-light);
+  padding: 1rem;
+  color: color(font);
+  display: flex;
+  flex-flow: column nowrap;
+  h2 {
+    font: 300 1.8rem/2.5rem Vibur;
+    margin: 0.5rem 0;
+    text-align: center;
+  }
+}
+
+#info-panel,
+#ui-panel {
+  h2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    span {
+      min-width: 8rem;
+    }
+  }
+  button[mat-raised-button] {
+    color: color(background-dark);
+  }
+}
+
+#random-panel {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  & > * {
+    margin: 0 0.5rem;
+  }
 }
 
 .hide {

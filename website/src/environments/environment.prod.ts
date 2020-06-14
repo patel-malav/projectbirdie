@@ -10,4 +10,5 @@ export const environment = {
     appId: '1:919024764295:web:7f57373bc85d9dfea9ff22',
     measurementId: 'G-MNDKQCCGD5',
   },
+  database: 'https://projbirdie.tech/graphql',
 };

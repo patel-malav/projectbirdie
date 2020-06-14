@@ -21,6 +21,7 @@ const schema = gql`
   type Country {
     id: ID!
     name: String!
+    short: String
     model: Model
     flag: String
     inatId: Int!
@@ -30,6 +31,9 @@ const schema = gql`
 
   type Model {
     path: String
+    level: Float
+    fontHeight: Float
+    fontSize: Float
   }
 
   extend type Query {
@@ -38,22 +42,27 @@ const schema = gql`
 `;
 
 const resolver: IResolvers = {
+  Model: {
+    path: ({ id }) => `${assetsPath}/countries/${id}.obj`,
+    level: ({ inat: { total_obs } }) => Math.ceil(Math.log10(total_obs + 1)),
+    fontHeight: ({ appearance: { font_height } }) => font_height,
+    fontSize: ({ appearance: { font_size } }) => font_size,
+  },
   Country: {
-    id: ({ _id }) => _id,
-    model: ({ model, _id }) => {
-      if (!model) return null;
-      else return { path: `${assetsPath}/countries/${_id}.obj` };
-    },
-    observations: ({ inat: { total_obs } }) => total_obs,
+    id: ({ id }) => id,
     inatId: ({ inat: { place_id } }) => place_id,
+    observations: ({ inat: { total_obs } }) => total_obs,
+    model: ({ model, id, inat, appearance }) => {
+      if (!model) return null;
+      else return { id, inat, appearance };
+    },
   },
   Query: {
     countries: async (p: any, { ids }: Args, { db }: Context) => {
       const countries = db.get("countries");
       let result: Country[];
       if (ids) {
-        console.log(await countries.find({ _id: { $in: ["IND"] } }));
-        result = await countries.find({ _id: { $in: ids } });
+        result = await countries.find({ id: { $in: ids } });
       } else {
         result = await countries.find({});
       }

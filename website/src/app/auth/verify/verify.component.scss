@@ -13,7 +13,12 @@
 
 h1 {
   margin: 1rem 0;
-  font: 400 2.5rem/3.5rem Vibur;
+  font: 400 2rem/2.5rem Vibur;
+}
+
+span {
+  color: color(font);
+  text-decoration: underline;
 }
 
 form {
@@ -34,7 +39,7 @@ form {
 @media only screen and (min-width: 768px) {
   form {
     & > * {
-      margin: 1rem 4rem;
+      margin: 1rem 8rem;
     }
   }
 }

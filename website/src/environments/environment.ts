@@ -14,6 +14,7 @@ export const environment = {
     appId: '1:919024764295:web:7f57373bc85d9dfea9ff22',
     measurementId: 'G-MNDKQCCGD5',
   },
+  database: 'http://localhost:5555/graphql',
 };
 /*
  * For easier debugging in development mode, you can import the following file

@@ -23,7 +23,7 @@ export const resolvers: IResolvers[] = [
   {
     Query: {
       hello: () =>
-        Promise.resolve<string>("GraphQL Server For 🐦 Project Birdie 🐦"),
+        new Promise((res) => setTimeout(res, 10000, "Delayed Message")),
     },
   },
 ];

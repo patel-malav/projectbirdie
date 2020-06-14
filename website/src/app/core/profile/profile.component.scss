@@ -5,12 +5,12 @@
   padding: 1rem;
   margin: 1rem;
   display: grid;
-  grid-template-rows: 15rem 0.2fr min-content;
+  grid-template-rows: 15rem 0.2fr min-content 1fr 1fr;
   grid-template-columns: 15rem 1fr;
   grid-template-areas:
     "img img"
     "name name"
-    "descp descp"
+    "descp descp";
 }
 
 #img {
@@ -40,7 +40,11 @@
 
 #descp {
   grid-area: descp;
-  font: 400 1.5rem/2rem Roboto;
+  font: 400 1.5rem/2rem Vibur;
+}
+
+h2 {
+  text-align: center;
 }
 
 /*==========  Mobile First Method  ==========*/
@@ -50,12 +54,12 @@
 /* Extra Small Devices, Phones */
 @media only screen and (min-width: 480px) {
   :host {
-    grid-template-rows: 0.4fr 1fr min-content;
+    column-gap: 1rem;
+    grid-template-rows: 0.4fr min-content min-content 1fr;
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
       "img name"
-      "descp descp"
-      "descp descp"
+      "descp descp";
   }
 
   #name {

@@ -1,5 +1,9 @@
 import { Injectable, NgZone } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
+import { Subject, from, asyncScheduler } from 'rxjs';
+import { Apollo } from 'apollo-angular';
+import gql from 'graphql-tag';
+import { tap, switchMap } from 'rxjs/operators';
+
 import {
   Scene,
   PerspectiveCamera,
@@ -7,15 +11,38 @@ import {
   DirectionalLight,
   WebGLRenderer,
   Object3D,
+  FontLoader,
+  Font,
+  Vector3,
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { OBJLoader2Parallel } from 'three/examples/jsm/loaders/OBJLoader2Parallel';
+import { Earth } from './three/earth.object';
+
+import { DataBusService } from '../data-bus.service';
+import { Country } from './three/country.object';
+import { Colors, greenShade } from './three/colors';
+import { Text } from './three/text.mesh';
+
+const countries = gql`
+  {
+    countries {
+      id
+      short
+      model {
+        path
+        level
+        fontSize
+        fontHeight
+      }
+    }
+  }
+`;
 
 @Injectable({
   providedIn: 'root',
 })
 export class ExploreService {
-  // Rxjs Subs
-  // private subs: Subscription[] = [];
   // Canvas
   private canvas$ = new Subject<HTMLCanvasElement>();
   // Three Globals
@@ -24,8 +51,15 @@ export class ExploreService {
   private light: Light = new DirectionalLight();
   private renderer: WebGLRenderer;
   private control: OrbitControls;
+  private objLoader = new OBJLoader2Parallel();
+  private fontLoader = new FontLoader();
+  private font: Promise<Font>;
 
-  constructor(private ngZone: NgZone) {
+  constructor(
+    private ngZone: NgZone,
+    private bus: DataBusService,
+    private apollo: Apollo
+  ) {
     console.warn(`Explore Service Created...`);
     /**
      * Camera Setup
@@ -45,9 +79,60 @@ export class ExploreService {
       // this.light.lookAt(0,0,0);
       this.camera.add(this.light);
     }
+
     this.canvas$.subscribe((canvas) => this.init(canvas));
-    // const sub = this.canvas$.subscribe((canvas) => this.init(canvas));
-    // this.subs.push(sub);
+
+    // Load Font
+    this.ngZone.runOutsideAngular(async () => {
+      this.font = this.fontLoader.loadAsync(
+        '/assets/optimer_regular.typeface.json'
+      );
+    });
+
+    // Add Earth Base Object
+    {
+      const earth = new Earth();
+      earth.surfaceColor = Colors.SURFACE;
+      this.addObject(earth);
+    }
+
+    // Add Countries
+    this.ngZone.runOutsideAngular(() => {
+      ++this.bus.reqCount;
+      apollo
+        .query<{
+          countries: {
+            id: string;
+            short: string;
+            model: {
+              level: number;
+              path: string;
+              fontSize: number;
+              fontHeight: number;
+            };
+          }[];
+        }>({
+          query: countries,
+        })
+        .pipe(tap(() => --this.bus.reqCount))
+        .subscribe(async (resp) => {
+          for (const country of resp.data.countries) {
+            const obj = new Country(country.id);
+            this.addObject(obj, 'Earth');
+            if (country.model) {
+              ++this.bus.reqCount;
+              obj.model = await this.objLoader.loadAsync(country.model.path);
+              --this.bus.reqCount;
+              obj.changeColor = greenShade[country.model.level];
+              obj.text = new Text(country.short, await this.font, {
+                pos: new Vector3().copy(await obj.center),
+                fontHeight: country.model.fontHeight,
+                fontSize: country.model.fontSize,
+              });
+            }
+          }
+        });
+    });
   }
 
   /**
@@ -71,7 +156,7 @@ export class ExploreService {
      */
     {
       this.control = new OrbitControls(this.camera, canvas);
-      this.control.minDistance = 6;
+      // this.control.minDistance = 6;
       this.control.maxDistance = 10;
       // this.control.autoRotate = true;
       // this.control.autoRotateSpeed = 1;

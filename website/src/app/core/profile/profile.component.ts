@@ -15,7 +15,13 @@ import { Component, OnInit, Input } from '@angular/core';
       </button>
     </div>
     <h2 id="name">{{ name | titlecase }}</h2>
-    <p id="descp">Description</p>
+    <p id="descp">
+      I love watching birds outside my window so i decided to make this website
+    </p>
+    <h2>6<br />Observations</h2>
+    <h2>4<br />Species</h2>
+    <h2>India<br />Country</h2>
+    <h2>just_me_malav<br />Instagram</h2>
   `,
   styleUrls: ['./profile.component.scss'],
 })

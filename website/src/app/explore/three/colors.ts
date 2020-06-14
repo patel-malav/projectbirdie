@@ -1,0 +1,19 @@
+export enum Colors {
+  SURFACE = 0x02066f,
+  DANGER = 0xff073a,
+  NETURAL = 0xffc107,
+  POSITIVE = 0x10a674,
+  BEST = 0x2dfe54,
+  BLACK = 0x000000,
+}
+
+export const greenShade = [
+  0xf7fbea,
+  0xdbec9a,
+  0xd8f866,
+  0xc8f526,
+  0xb6ea7d,
+  0xb1dd27,
+  0x78ca20,
+  0x385e0f,
+];

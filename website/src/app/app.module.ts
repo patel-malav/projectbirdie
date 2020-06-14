@@ -18,6 +18,7 @@ import { NavComponent } from './nav/nav.component';
 import { ExploreModule } from './explore/explore.module';
 import { environment } from 'src/environments/environment';
 import { AuthModule } from './auth/auth.module';
+import { GraphQLModule } from './graphql.module';
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent, FooterComponent, NavComponent],
@@ -34,6 +35,7 @@ import { AuthModule } from './auth/auth.module';
     CoreModule,
     ExploreModule,
     AuthModule,
+    GraphQLModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

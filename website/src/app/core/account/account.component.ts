@@ -4,10 +4,14 @@ import { AuthService } from 'src/app/auth/auth.service';
 @Component({
   selector: 'pb-account',
   template: `
-    <ng-container *ngIf="auth.user$ | async as user">
+    <ng-container *ngIf="auth.user$ | async as user; else spinner">
       <pb-profile [name]="user.displayName" [url]="user?.photoURL"></pb-profile>
+      <pb-watchlist></pb-watchlist>
+      <pb-gallery></pb-gallery>
     </ng-container>
-    <h1>Work In Progress</h1>
+    <ng-template #spinner>
+      <h1>Loading ...</h1>
+    </ng-template>
   `,
   styleUrls: ['./account.component.scss'],
 })

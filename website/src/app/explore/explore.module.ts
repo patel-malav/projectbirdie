@@ -10,6 +10,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { SearchResultComponent } from './search-result/search-result.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -26,6 +29,9 @@ import { SearchResultComponent } from './search-result/search-result.component';
     MatInputModule,
     MatFormFieldModule,
     MatIconModule,
+    MatButtonModule,
+    MatSliderModule,
+    MatSelectModule,
   ],
 })
 export class ExploreModule {}
