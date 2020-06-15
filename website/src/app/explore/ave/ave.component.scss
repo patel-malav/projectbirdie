@@ -3,29 +3,22 @@
 :host {
   grid-area: route;
   background-color: color(background-light);
-  display: grid;
+  display: flex;
+  flex-flow: column nowrap;
   padding: 1rem;
-  grid-template-rows: 16rem auto;
+  align-items: center;
+  justify-content: space-evenly;
   color: color(font);
-  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  // text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 
-#head {
+img {
+  width: 24rem;
+}
+
+h3 {
   display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-  padding: 1rem;
-  cursor: pointer;
-  background: color(background-dark);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  h1 {
-    font: 400 3rem/4rem Vibur;
-    margin: 0;
-  }
-  h2 {
-    margin: 0;
-    font: 200 2rem/2.5rem Vibur;
-  }
+  justify-content: space-evenly;
+  margin: 0.5rem 0;
+  width: 100%;
 }

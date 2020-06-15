@@ -13,6 +13,7 @@ import { SearchResultComponent } from './search-result/search-result.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSelectModule } from '@angular/material/select';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatButtonModule,
     MatSliderModule,
     MatSelectModule,
+    MatProgressSpinnerModule,
   ],
 })
 export class ExploreModule {}

@@ -2,10 +2,11 @@ import { gql, IResolvers } from "apollo-server-express";
 import axios from "axios";
 import { IMonkManager, id as monkId, ICollection } from "monk";
 
-const inatAPI = "https://api.inaturalist.org/v1";
+const inatAPI = "https://api.inaturalist.org/v1/taxa";
 
 interface Args {
-  id: number;
+  id: string;
+  pid: string;
 }
 interface Context {
   db: IMonkManager;
@@ -21,7 +22,8 @@ const schema = gql`
     name: String
     rank: String
     defaultImage: String
-    # images: [String]
+    images: [String]
+    extinct: Boolean
     inatId: Int!
     wiki: String
     descp: String
@@ -33,18 +35,20 @@ const schema = gql`
 `;
 const resolver: IResolvers = {
   Query: {
-    ave: async (_p: any, { id }: Args, { db }: Context) => {
+    ave: async function (_p: any, { id, pid }: Args, { db }: Context) {
       const aves = db.get("aves");
-      let out: any = null;
       try {
-        out = await aves.findOne({ "inat.taxa_id": id });
-        if (!out?._id) {
-          out = await fetchAndUpdateAve(aves, id);
-        }
+        let out = await fetchAndUpdateAve(aves, parseInt(id), pid);
+        return out;
+        // let out = await aves.findOne({ "inat.taxa_id": parseInt(id) });
+        // if (!out?._id) {
+        //   return fetchAndUpdateAve(aves, parseInt(id));
+        // } else {
+        //   return out;
+        // }
       } catch (err) {
         console.log(err);
       }
-      return out;
     },
   },
   Ave: {
@@ -66,12 +70,12 @@ const resolver: IResolvers = {
 
 export { schema, resolver };
 
-async function fetchAndUpdateAve(
+export async function fetchAndUpdateAve(
   collection: ICollection<any>,
   id: number,
   pid?: any
 ) {
-  const { data } = await axios.get(`${inatAPI}/taxa/${id}`);
+  const { data } = await axios.get(`${inatAPI}/${id}`);
   let {
     id: taxa_id,
     preferred_common_name: name,
@@ -80,22 +84,40 @@ async function fetchAndUpdateAve(
     complete_species_count: species_count,
     extinct,
     default_photo,
+    taxon_photos,
+    observations_count: obs_count,
     wikipedia_url: wiki,
     wikipedia_summary: descp,
-    // children,
+    children,
   } = data.results[0];
-  let default_image = default_photo?.square_url.split("?")[0];
+  const default_image = default_photo?.square_url
+    .split("?")[0]
+    .replace(/thumb|square|medium|small|medium|large/, "original");
+  const images = taxon_photos?.map(({ photo: { url } }: any) =>
+    url
+      .split("?")[0]
+      .replace(/thumb|square|medium|small|medium|large/, "original")
+  );
+  children = children.map(({ id }: any) => id);
   let output = {
     name,
     sci,
     rank,
-    inat: { taxa_id },
+    inat: { taxa_id, obs_count, children },
     pid: pid ? monkId(pid) : null,
     species_count,
     extinct,
+    images,
     default_image,
     wiki,
     descp,
   };
-  return collection.insert(output);
+  return collection.findOneAndUpdate(
+    { "inat.taxa_id": id },
+    { $set: output },
+    {
+      upsert: true,
+      returnNewDocument: true,
+    }
+  );
 }

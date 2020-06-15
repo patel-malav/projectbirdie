@@ -11,17 +11,17 @@ const routes: Routes = [
     component: ExploreComponent,
     children: [
       {
-        path: 'ave/:term',
+        path: 'ave/:id',
         pathMatch: 'full',
         component: AveComponent,
       },
       {
-        path: 'observation/:id',
+        path: 'observation/:ids',
         pathMatch: 'full',
         component: ObservationComponent,
       },
       {
-        path: 'user/:name',
+        path: 'user/:id',
         pathMatch: 'full',
         component: UserComponent,
       },

@@ -20,6 +20,7 @@ const schema = gql`
     name: String
     image: String
     descp: String
+    inatId: Int
     # observations: [Observation]
     # lists: [List]
   }
@@ -48,6 +49,7 @@ const resolver: IResolvers = {
   User: {
     id: ({ _id }) => _id,
     descp: ({ inat: { login } }) => `User ${login} from Inaturalist`,
+    inatId: ({ inat: { user_id } }) => user_id,
   },
 };
 
