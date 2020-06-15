@@ -1,15 +1,9 @@
-import { gql, IResolvers, ApolloError } from "apollo-server-express";
+import { gql, IResolvers } from "apollo-server-express";
 import { IMonkManager } from "monk";
 import { assetsPath } from "../env.json";
 
-interface Country {
-  cid: string;
-  name: string;
-  model: string;
-}
-
 interface Args {
-  ids: string[];
+  codes: string[];
   names: string[];
 }
 
@@ -20,13 +14,14 @@ interface Context {
 const schema = gql`
   type Country {
     id: ID!
+    code: ID!
     name: String!
     short: String
     model: Model
     flag: String
     inatId: Int!
-    observations: Int!
-    # coord: Coordinate
+    # observations(limit: Int = 45): [Observation]
+    # aves(limit: Int = 10): [Ave]
   }
 
   type Model {
@@ -37,32 +32,37 @@ const schema = gql`
   }
 
   extend type Query {
-    countries(ids: [String]): [Country]
+    countries(codes: [String]): [Country]
   }
 `;
 
 const resolver: IResolvers = {
+  Country: {
+    id: ({ _id }) => _id,
+    model: ({ model, code, inat, appearance }) => {
+      if (model) return { code, inat, appearance };
+      return null;
+    },
+    inatId: ({ inat: { place_id } }) => place_id,
+    // observations: ({}, { limit }) => {
+    //   return [];
+    // },
+    // aves: ({}, { limit }) => {
+    //   return [];
+    // },
+  },
   Model: {
-    path: ({ id }) => `${assetsPath}/countries/${id}.obj`,
+    path: ({ code }) => `${assetsPath}/countries/${code}.obj`,
     level: ({ inat: { total_obs } }) => Math.ceil(Math.log10(total_obs + 1)),
     fontHeight: ({ appearance: { font_height } }) => font_height,
     fontSize: ({ appearance: { font_size } }) => font_size,
   },
-  Country: {
-    id: ({ id }) => id,
-    inatId: ({ inat: { place_id } }) => place_id,
-    observations: ({ inat: { total_obs } }) => total_obs,
-    model: ({ model, id, inat, appearance }) => {
-      if (!model) return null;
-      else return { id, inat, appearance };
-    },
-  },
   Query: {
-    countries: async (p: any, { ids }: Args, { db }: Context) => {
+    countries: async (p: any, { codes }: Args, { db }: Context) => {
       const countries = db.get("countries");
-      let result: Country[];
-      if (ids) {
-        result = await countries.find({ id: { $in: ids } });
+      let result: any[];
+      if (codes) {
+        result = await countries.find({ code: { $in: codes } });
       } else {
         result = await countries.find({});
       }

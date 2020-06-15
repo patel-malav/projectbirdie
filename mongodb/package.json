@@ -8,6 +8,7 @@
   "dependencies": {
     "@types/inquirer": "^6.5.0",
     "axios": "^0.19.2",
+    "chalk": "^4.1.0",
     "inquirer": "^7.1.0",
     "monk": "^7.3.0",
     "rxjs": "^6.5.5",

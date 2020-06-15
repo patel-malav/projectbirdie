@@ -101,7 +101,6 @@ export class ExploreComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.explore.setCanvas = this.canvas.nativeElement;
     this.explore.start();
-
     this.explore.resize(
       this.canvas.nativeElement.clientWidth,
       this.canvas.nativeElement.clientHeight
