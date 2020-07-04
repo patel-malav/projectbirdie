@@ -1,6 +1,7 @@
 import { gql, IResolvers } from "apollo-server-express";
 import axios from "axios";
-import { IMonkManager, ICollection } from "monk";
+import monk, { IMonkManager, ICollection, id as monkId } from "monk";
+import { fetchAndUpdateAve } from "./ave";
 
 const iNatAPI = "https://api.inaturalist.org/v1/observations";
 
@@ -22,8 +23,8 @@ const schema = gql`
     coord: [Float]
     images: [String]
     createdAt: Date
-    # ave: Ave
-    # country: Country
+    ave: Ave
+    country: Country
   }
 `;
 const resolver: IResolvers = {
@@ -55,6 +56,31 @@ const resolver: IResolvers = {
   },
   Observation: {
     id: ({ _id }) => _id,
+    ave: ({ inat: { taxa_id } }, _args: Args, { db }: Context) => {
+      const aves = db.get("aves");
+      console.log(`Getting : ${taxa_id}`);
+      return fetchAndUpdateAve(aves, taxa_id);
+    },
+    country: async (
+      { _id, inat: { place_ids } },
+      _args: Args,
+      { db }: Context
+    ) => {
+      const countries = db.get("countries");
+      const result = await countries.findOne({
+        "inat.place_id": { $in: place_ids },
+      });
+      if (result?._id) {
+        const countries = db.get("countries");
+        return countries.findOneAndUpdate(
+          { _id: result._id },
+          { $addToSet: { observations: monkId(_id) } },
+          { returnNewDocument: true }
+        );
+      } else {
+        return null;
+      }
+    },
   },
 };
 

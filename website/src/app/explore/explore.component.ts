@@ -27,9 +27,15 @@ const countries = gql`
   template: `
     <div id="aside">
       <div id="info-panel">
-        <h2><span>Location</span> : <span>The World</span></h2>
-        <h2><span>Observations</span> : <span>5,906,145</span></h2>
-        <h2><span>Species</span> : <span>9,754</span></h2>
+        <h2>
+          <span>Location</span> : <span>{{ bus.location }}</span>
+        </h2>
+        <h2>
+          <span>Observations</span> : <span>{{ bus.observationsCount }}</span>
+        </h2>
+        <h2>
+          <span>Species</span> : <span>{{ bus.speciesCount }}</span>
+        </h2>
       </div>
       <div id="data-panel">
         <h2>Search or Click below</h2>
@@ -96,7 +102,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
   @ViewChild('canvas', { static: true })
   private canvas: ElementRef<HTMLCanvasElement>;
 
-  constructor(private explore: ExploreService) {}
+  constructor(private explore: ExploreService, public bus: DataBusService) {}
 
   ngOnInit(): void {
     this.explore.setCanvas = this.canvas.nativeElement;

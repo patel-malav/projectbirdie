@@ -7,6 +7,10 @@ import { DataBusService } from 'src/app/data-bus.service';
 import { Observable } from 'rxjs';
 import { Ave } from 'src/app/type';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ExploreService } from '../explore.service';
+import { Country } from '../three/country.object';
+import { Bird } from '../three/bird';
+import { Track } from '../three/path';
 
 const query = gql`
   query ave($id: ID!) {
@@ -20,6 +24,7 @@ const query = gql`
       wiki
       descp
       speciesCount
+      observationsCount
     }
   }
 `;
@@ -56,25 +61,65 @@ const query = gql`
 })
 export class AveComponent implements OnInit, OnDestroy {
   ave: Observable<Ave>;
+  paths: string[][];
   constructor(
     private route: ActivatedRoute,
     private apollo: Apollo,
     private bus: DataBusService,
-    public santizer: DomSanitizer
+    public santizer: DomSanitizer,
+    private explore: ExploreService
   ) {}
 
   ngOnInit(): void {
     this.ave = this.route.params.pipe(
       tap((_) => ++this.bus.reqCount),
-      switchMap(({ id }) =>
-        this.apollo.query<any>({ query, variables: { id } })
-      ),
+      switchMap(({ id }) => {
+        console.log(`Getting ${id}`);
+        return this.apollo.query<any>({
+          query,
+          variables: { id },
+        });
+      }),
       tap((_) => --this.bus.reqCount),
       map(({ data: { ave } }) => ave)
     );
+    this.ave.subscribe((data) => {
+      this.bus.speciesCount = data.speciesCount ? data.speciesCount : null;
+      this.bus.observationsCount = data.observationsCount;
+    });
 
-    this.ave.subscribe((data) => console.log(data));
+    setTimeout(() => {
+      if (this.paths.length) {
+        this.paths.forEach((path) => this.showPath(path));
+      }
+    }, 24000);
+
+    this.paths = [
+      ['RUS', 'CHN', 'IND'],
+      ['IDN', 'AUS', 'NZL'],
+      ['CAN', 'USA', 'MEX', 'COL'],
+    ];
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    if (this.paths.length) {
+      this.paths.forEach((path) => this.removePath(path));
+    }
+  }
+
+  async showPath(names: string[]) {
+    const earth = this.explore.scene.getObjectByName('Earth');
+    const countries: Country[] = [];
+    for (const name of names) {
+      const country = earth.getObjectByName(name) as Country;
+      countries.push(country);
+    }
+    const track = new Track(countries);
+    earth.add(track);
+  }
+  removePath(names: string[]) {
+    const earth = this.explore.scene.getObjectByName('Earth');
+    const track = earth.getObjectByName(names.join('-'));
+    earth.remove(track);
+  }
 }

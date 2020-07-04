@@ -7,6 +7,9 @@ import { DataBusService } from 'src/app/data-bus.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { tap, switchMap, map } from 'rxjs/operators';
 import gql from 'graphql-tag';
+import { ExploreService } from '../explore.service';
+import { Bird } from '../three/bird';
+import { Country } from '../three/country.object';
 
 const query = gql`
   query user($id: Int!) {
@@ -42,11 +45,13 @@ const query = gql`
 })
 export class UserComponent implements OnInit, OnDestroy {
   user: Observable<User>;
+  birds: Bird[];
   constructor(
     private route: ActivatedRoute,
     private apollo: Apollo,
     private bus: DataBusService,
-    public santizer: DomSanitizer
+    public santizer: DomSanitizer,
+    private explore: ExploreService
   ) {}
 
   ngOnInit(): void {
@@ -59,7 +64,25 @@ export class UserComponent implements OnInit, OnDestroy {
       map(({ data: { user } }) => user)
     );
     this.user.subscribe((data) => console.log(data));
+
+    setTimeout(() => {}, 24000);
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.removeBird();
+  }
+
+  async addBird(coords: number[], country: string, name?: string) {
+    const bird = new Bird(
+      coords,
+      this.explore.scene.getObjectByName('IND') as Country,
+      name
+    );
+    bird.model = this.explore.birdModel;
+    bird.changeColor = 0xff0000;
+    this.birds.push(bird);
+  }
+  async removeBird() {
+    this.birds.forEach((bird) => this.explore.scene.remove(bird));
+  }
 }

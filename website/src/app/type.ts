@@ -22,6 +22,7 @@ export type Ave = {
   wiki?: Maybe<Scalars['String']>;
   descp?: Maybe<Scalars['String']>;
   speciesCount?: Maybe<Scalars['Int']>;
+  observationsCount?: Maybe<Scalars['Int']>;
   parent?: Maybe<Ave>;
 };
 
@@ -59,6 +60,8 @@ export type Observation = {
   coord?: Maybe<Array<Maybe<Scalars['Float']>>>;
   images?: Maybe<Array<Maybe<Scalars['String']>>>;
   createdAt?: Maybe<Scalars['Date']>;
+  ave?: Maybe<Ave>;
+  country?: Maybe<Country>;
 };
 
 export type Query = {

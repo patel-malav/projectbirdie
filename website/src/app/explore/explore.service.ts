@@ -23,11 +23,13 @@ import { DataBusService } from '../data-bus.service';
 import { Country } from './three/country.object';
 import { Colors, greenShade } from './three/colors';
 import { Text } from './three/text.mesh';
+import { Bird } from './three/bird';
+import { Binoculars } from './three/binoculars';
 
 const countries = gql`
   {
     countries {
-      id
+      code
       short
       model {
         path
@@ -46,14 +48,16 @@ export class ExploreService {
   // Canvas
   private canvas$ = new Subject<HTMLCanvasElement>();
   // Three Globals
-  private scene: Scene = new Scene();
+  public scene: Scene = new Scene();
   private camera: PerspectiveCamera = new PerspectiveCamera();
   private light: Light = new DirectionalLight();
   private renderer: WebGLRenderer;
   private control: OrbitControls;
-  private objLoader = new OBJLoader2Parallel();
+  private countryLoader = new OBJLoader2Parallel();
   private fontLoader = new FontLoader();
   private font: Promise<Font>;
+  public birdModel: Bird;
+  public binocularsModel: Binoculars;
 
   constructor(
     private ngZone: NgZone,
@@ -93,6 +97,7 @@ export class ExploreService {
     {
       const earth = new Earth();
       earth.surfaceColor = Colors.SURFACE;
+      // earth.wireframe = true;
       this.addObject(earth);
     }
 
@@ -102,7 +107,7 @@ export class ExploreService {
       apollo
         .query<{
           countries: {
-            id: string;
+            code: string;
             short: string;
             model: {
               level: number;
@@ -117,11 +122,13 @@ export class ExploreService {
         .pipe(tap(() => --this.bus.reqCount))
         .subscribe(async (resp) => {
           for (const country of resp.data.countries) {
-            const obj = new Country(country.id);
+            const obj = new Country(country.code);
             this.addObject(obj, 'Earth');
             if (country.model) {
               ++this.bus.reqCount;
-              obj.model = await this.objLoader.loadAsync(country.model.path);
+              obj.model = await this.countryLoader.loadAsync(
+                country.model.path
+              );
               --this.bus.reqCount;
               obj.changeColor = greenShade[country.model.level];
               obj.text = new Text(country.short, await this.font, {
@@ -132,6 +139,20 @@ export class ExploreService {
             }
           }
         });
+    });
+
+    // Test Add Bird
+    this.ngZone.runOutsideAngular(async () => {
+      ++this.bus.reqCount;
+      this.birdModel = await new OBJLoader2Parallel().loadAsync(
+        '/assets/bird.obj'
+      );
+      --this.bus.reqCount;
+      ++this.bus.reqCount;
+      this.binocularsModel = await new OBJLoader2Parallel().loadAsync(
+        '/assets/binoculars.obj'
+      );
+      --this.bus.reqCount;
     });
   }
 

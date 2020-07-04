@@ -10,6 +10,9 @@ import { tap } from 'rxjs/operators';
 })
 export class DataBusService {
   reqCount = 0;
+  speciesCount = 0;
+  observationsCount = 0;
+  location = 'The World';
 
   constructor(
     iconReg: MatIconRegistry,

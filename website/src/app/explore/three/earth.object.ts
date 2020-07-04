@@ -20,7 +20,6 @@ export class Earth extends Object3D {
     const surface = new Mesh(geometry, material);
     surface.name = 'Surface';
     this.add(surface);
-    this.add(new AxesHelper(5));
   }
   public set surfaceColor(v: number) {
     const material = (this.children[0] as Mesh).material as MeshToonMaterial;

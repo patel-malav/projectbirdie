@@ -15,6 +15,7 @@ interface Context {
 const schema = gql`
   extend type Query {
     ave(id: ID!): Ave
+    search(term: String): [Ave]
   }
   type Ave {
     id: ID!
@@ -28,6 +29,7 @@ const schema = gql`
     wiki: String
     descp: String
     speciesCount: Int
+    observationsCount: Int
     parent: Ave
     # observations: [Observation]
     # articles: Articles
@@ -40,15 +42,13 @@ const resolver: IResolvers = {
       try {
         let out = await fetchAndUpdateAve(aves, parseInt(id), pid);
         return out;
-        // let out = await aves.findOne({ "inat.taxa_id": parseInt(id) });
-        // if (!out?._id) {
-        //   return fetchAndUpdateAve(aves, parseInt(id));
-        // } else {
-        //   return out;
-        // }
       } catch (err) {
         console.log(err);
       }
+    },
+    search: async (_p: any, { term }: any, { db }: Context) => {
+      const aves = db.get("aves");
+      return aves.find({ $text: { $search: term } });
     },
   },
   Ave: {
@@ -58,6 +58,7 @@ const resolver: IResolvers = {
     defaultImage: ({ default_image }) => default_image,
     inatId: ({ inat: { taxa_id } }) => taxa_id,
     speciesCount: ({ species_count }) => species_count,
+    observationsCount: ({ inat: { obs_count } }) => obs_count,
     parent: async ({ pid }, _args: Args, { db }: Context) => {
       if (!pid) return null;
       const aves = db.get("aves");
@@ -90,15 +91,26 @@ export async function fetchAndUpdateAve(
     wikipedia_summary: descp,
     children,
   } = data.results[0];
-  const default_image = default_photo?.square_url
-    .split("?")[0]
-    .replace(/thumb|square|medium|small|medium|large/, "original");
+  const default_image = default_photo?.square_url.startsWith(
+    "https://static.inaturalist.org/photos/"
+  )
+    ? default_photo?.square_url
+        .split("?")[0]
+        .replace(/thumb|square|medium|small|medium|large/, "original")
+    : default_photo.square_url;
+
   const images = taxon_photos?.map(({ photo: { url } }: any) =>
-    url
-      .split("?")[0]
-      .replace(/thumb|square|medium|small|medium|large/, "original")
+    url.startsWith("https://static.inaturalist.org/photos/")
+      ? url
+          .split("?")[0]
+          .replace(/thumb|square|medium|small|medium|large/, "original")
+      : url
   );
-  children = children.map(({ id }: any) => id);
+  if (children?.length) {
+    children = children.map(({ id }: any) => id);
+  } else {
+    children = null;
+  }
   let output = {
     name,
     sci,
