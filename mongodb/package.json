@@ -7,7 +7,7 @@
   "license": "MIT",
   "dependencies": {
     "@types/inquirer": "^6.5.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "inquirer": "^7.1.0",
     "monk": "^7.3.0",
     "rxjs": "^6.5.5",
